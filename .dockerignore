@@ -1,0 +1,19 @@
+# Git
+.git
+.gitignore
+
+# Python / UV
+.venv
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+
+# Testing / Quality
+.pytest_cache
+.ruff_cache
+tests/
+*test_*.py
+
+# Environment
+.env

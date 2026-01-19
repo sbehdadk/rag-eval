@@ -1,0 +1,135 @@
+# ==============================================================================
+# 🎓 DOCKER MASTERCLASS: PRACTICAL EXAM
+# ==============================================================================
+# This Dockerfile is not just a build script; it is a lesson in architecture.
+# It demonstrates the "Holy Grail" of Docker:
+# 1. Multi-Stage Builds (Small images, clean layers)
+# 2. Advanced Caching (Build in seconds, not minutes)
+# 3. Security (Non-root, minimal attack surface)
+# 4. Observability (Healthchecks, Metadata)
+# 5. CI/CD Integration (Testing inside Docker)
+
+# ------------------------------------------------------------------------------
+# 🛠️ STAGE 1: BASE (The Common Foundation)
+# ------------------------------------------------------------------------------
+# Why? We define shared environment variables and OS dependencies here so both
+# the builder and the runtime stages inherit them. This avoids duplication.
+# ------------------------------------------------------------------------------
+ARG PYTHON_VERSION=3.13
+FROM python:${PYTHON_VERSION}-slim-bookworm AS base
+
+# 💡 BEST PRACTICE: Python Settings for Containers
+# - PYTHONUNBUFFERED=1: Forces stdout/stderr to be flushed immediately.
+#   Essential for viewing logs in real-time (e.g., `docker logs -f`).
+# - PYTHONDONTWRITEBYTECODE=1: Prevents .pyc files. In a container, code changes
+#   require a rebuild anyway, so writing bytecode to disk is often wasted I/O.
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    # Point to where we will install our venv
+    VIRTUAL_ENV=/app/.venv \
+    PATH="/app/.venv/bin:$PATH"
+
+WORKDIR /app
+
+# ------------------------------------------------------------------------------
+# 🏗️ STAGE 2: BUILDER (The Heavy Lifter)
+# ------------------------------------------------------------------------------
+# Why? This stage contains "heavy" tools (gcc, uv, git) needed to BUILD the app,
+# but which are security risks or wasted space in production.
+# ------------------------------------------------------------------------------
+FROM base AS builder
+
+# Install uv (The fastest Python package manager)
+# Using 'copying' instead of installing keeps layers clean.
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /bin/uv
+
+# 💡 BEST PRACTICE: Environment Config for Build
+# - UV_LINK_MODE=copy: In Docker, symlinks can sometimes fail across stages.
+#   Copying guarantees the files exist physically.
+# - UV_COMPILE_BYTECODE=1: We DO want bytecode here for the final artifact
+#   to speed up application startup in prod.
+ENV UV_LINK_MODE=copy \
+    UV_COMPILE_BYTECODE=1 \
+    UV_PYTHON_DOWNLOADS=never
+
+# 💡 CACHING STRATEGY: "Mounts" (The Secret Weapon)
+# We use `--mount=type=cache` to persist the pip/uv cache BETWEEN builds.
+# Even if you change your Dockerfile, the cache remains on your machine.
+# This makes subsequent builds lightning fast.
+
+# 1. Install Dependencies
+# We copy ONLY the lock files first. Docker checks if these changed.
+# If they didn't, it reuses the layer from the last build.
+COPY pyproject.toml uv.lock ./
+
+RUN --mount=type=cache,target=/root/.cache/uv \
+    uv sync --frozen --no-install-project --no-dev
+
+# 2. Install Project
+# Now we copy the source. This changes often.
+COPY src /app/src
+COPY README.md .
+
+RUN --mount=type=cache,target=/root/.cache/uv \
+    uv sync --frozen --no-dev
+
+# ------------------------------------------------------------------------------
+# 🧪 STAGE 3: TEST (CI/CD Verification)
+# ------------------------------------------------------------------------------
+# Why? We run tests INSIDE the container. This guarantees that if it passes here,
+# it will definitely work in production (same OS, same libs).
+# ------------------------------------------------------------------------------
+FROM builder AS testing
+
+# Install dev dependencies (pytest, ruff, etc.)
+RUN --mount=type=cache,target=/root/.cache/uv \
+    uv sync --frozen
+
+# Command to run by default if target is 'testing'
+CMD ["pytest", "src/rag_eval/tests"]
+
+
+# ------------------------------------------------------------------------------
+# 🚀 STAGE 4: PRODUCTION (The Final Artifact)
+# ------------------------------------------------------------------------------
+# Why? We copy ONLY what we need from the builder.
+# - No `uv` executable
+# - No C compilers
+# - No source code that isn't needed
+# ------------------------------------------------------------------------------
+FROM base AS production
+
+# 💡 SECURITY: Non-Root User
+# By default, containers run as root. A breakout means root on host.
+# We create a restricted user 'appuser' with no password.
+RUN groupadd -r appuser && useradd -r -g appuser appuser
+
+# Copy the pre-built virtual environment from builder
+# We MUST use --chown here, otherwise files belong to root and appuser can't read/exec.
+COPY --from=builder --chown=appuser:appuser /app/.venv /app/.venv
+COPY --from=builder --chown=appuser:appuser /app/src /app/src
+
+# 💡 APP CONFIGURATION
+# We set the pythonpath so python can find our module 'rag_eval'
+ENV PYTHONPATH="/app/src"
+
+# Switch to the restricted user.
+# Any command after this line runs as 'appuser'.
+USER appuser
+
+# 💡 OBSERVABILITY: Healthcheck
+# Docker/K8s poll this command to see if the app is "alive".
+# If it fails 3 times, the orchestration system (Swarm/K8s) kills & restarts it.
+# In a real app, use `curl -f http://localhost:8000/health || exit 1`
+HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 \
+    CMD python -c "import socket; s = socket.socket(socket.AF_INET, socket.SOCK_STREAM); result = s.connect_ex(('localhost', 8000)); exit(result)"
+
+# 💡 METADATA: Labels
+# Useful for inventory management tools.
+LABEL org.opencontainers.image.title="RAG Eval Service" \
+    org.opencontainers.image.description="Evaluation service for RAG pipelines" \
+    org.opencontainers.image.version="1.0.0"
+
+# The command that starts our application
+# We use list syntax ["cmd", "arg"] to ensure it runs as PID 1 (captures signals).
+CMD ["uvicorn", "rag_eval.main:app", "--host", "0.0.0.0", "--port", "8000"]

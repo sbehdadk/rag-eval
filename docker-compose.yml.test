@@ -1,0 +1,113 @@
+# ==============================================================================
+# 🐳 DOCKER COMPOSE: LOCAL DEVELOPMENT ORCHESTRATION
+# ==============================================================================
+# This file is the "Manager" for your local development environment.
+# detailed comments explain the "Why" behind every configuration.
+#
+# USAGE:
+#   docker-compose up       (Start everything in foreground)
+#   docker-compose up -d    (Start in background)
+#   docker-compose down     (Stop and remove containers/networks)
+# ==============================================================================
+
+services:
+  # ----------------------------------------------------------------------------
+  # 🐍 APPLICATION SERVICE (Your Python Logic)
+  # ----------------------------------------------------------------------------
+  app:
+    # Build Configuration
+    # We point to our "Mastery" Dockerfile.
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+      # 💡 TRICK: We target 'builder' or 'base' for dev to save time?
+      # Actually, we target 'production' generally to minimize env drift,
+      # BUT for dev we usually want dev tools.
+      # Let's create a specific 'development' target in Dockerfile if we needed it,
+      # but here we'll use 'production' base and override the command for reloading.
+      target: production
+
+    # 💡 OVERRIDE: Container Name
+    # Fixes the name so we can easily type `docker logs rag-eval`
+    container_name: rag-eval
+
+    # 💡 OVERRIDE: Command
+    # In prod, we run plain uvicorn. In dev, we add `--reload`.
+    # We also force host 0.0.0.0 so we can reach it from our machine.
+    command: uvicorn rag_eval.main:app --host 0.0.0.0 --port 8000 --reload
+
+    # 💡 NETWORKING: Ports
+    # Maps localhost:8000 -> container:8000
+    ports:
+      - "8000:8000"
+
+    # 💡 DEV EXPERIENCE: Volumes
+    # We mount our local 'src' directory INTO the container.
+    # This means when you hit 'Save' in VS Code, the container sees it instantly.
+    # The '--reload' flag in command then restarts the server.
+    volumes:
+      - ./src:/app/src
+      # We also mount .env to runtime
+      - .env:/app/.env
+
+    # 💡 CONFIGURATION: Environment Variables
+    # We load from .env file, but can validly override here.
+    env_file:
+      - .env
+
+    # 💡 ORCHESTRATION: Dependencies
+    # We wait for the DB to be "Healthy" (not just started) before we start.
+    # requires the 'healthcheck' block in the db service.
+    depends_on:
+      db:
+        condition: service_healthy
+
+    # 💡 NETWORKING
+    # Explicitly join the backend network
+    networks:
+      - backend
+
+  # ----------------------------------------------------------------------------
+  # 🗄️ DATABASE SERVICE (PostgreSQL)
+  # ----------------------------------------------------------------------------
+  db:
+    image: postgres:15-alpine
+    container_name: rag-eval-db
+
+    # 💡 PERSISTENCE: Volumes
+    # We use a "Named Volume" (postgres_data) to store the actual DB files.
+    # This ensures data survives `docker-compose down`.
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: devpassword
+      POSTGRES_DB: rageval
+
+    networks:
+      - backend
+
+    # 💡 OBSERVABILITY: Healthcheck
+    # The app waits for THIS check to pass.
+    # pg_isready is a utility inside the postgres image.
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+# ==============================================================================
+# 🌐 NETWORKS
+# ==============================================================================
+# We define a custom network. This isolates our containers from other projects.
+networks:
+  backend:
+    driver: bridge
+
+# ==============================================================================
+# 💾 VOLUMES
+# ==============================================================================
+# Named volumes must be declared here.
+volumes:
+  postgres_data:
