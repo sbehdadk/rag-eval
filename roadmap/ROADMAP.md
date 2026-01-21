@@ -351,10 +351,10 @@ Use ECS Fargate instead of EKS.
 
 ## Keywords for Search
 
-**CI/CD:** GitHub Actions, pipeline, lint, test, build, deploy, cache, secrets, Dependabot  
-**Kubernetes:** Pod, Deployment, Service, ConfigMap, Secret, kubectl, Minikube, RBAC, resource limits  
-**Monitoring:** Prometheus, Grafana, metrics, alerts, RED (Rate/Errors/Duration), instrumentation  
-**Terraform:** IaC, modules, state, S3 backend, VPC, ECS, Fargate, ALB, IAM  
-**Security:** Secrets Manager, IAM roles, encryption, WAF, least privilege, RBAC  
-**Cost:** Spot instances, autoscaling, tagging, Savings Plans, lifecycle policies, infracost  
+**CI/CD:** GitHub Actions, pipeline, lint, test, build, deploy, cache, secrets, Dependabot
+**Kubernetes:** Pod, Deployment, Service, ConfigMap, Secret, kubectl, Minikube, RBAC, resource limits
+**Monitoring:** Prometheus, Grafana, metrics, alerts, RED (Rate/Errors/Duration), instrumentation
+**Terraform:** IaC, modules, state, S3 backend, VPC, ECS, Fargate, ALB, IAM
+**Security:** Secrets Manager, IAM roles, encryption, WAF, least privilege, RBAC
+**Cost:** Spot instances, autoscaling, tagging, Savings Plans, lifecycle policies, infracost
 **Architecture:** ADR, trade-offs, decision-making, ECS vs EKS, Terraform vs CloudFormation

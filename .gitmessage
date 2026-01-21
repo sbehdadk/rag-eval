@@ -1,0 +1,40 @@
+# <type>(<scope>): <subject>
+#
+# <body>
+#
+# <footer>
+#
+# --- GUIDELINES ---
+# Type: feat, fix, docs, style, refactor, perf, test, chore, build, ci
+# Scope: Optional component/module (api, core, tests, deps, etc.)
+# Subject: Imperative mood, no period, max 50 chars
+# Body: Why this change? What does it do? (wrap at 72 chars)
+# Footer: Breaking changes, issue refs (e.g., Refs: #123)
+#
+# --- EXAMPLES ---
+#
+# Simple one-line commit:
+# feat(auth): add JWT token validation
+#
+# Commit with detailed body:
+# fix(evaluator): resolve memory leak in async operations
+#
+# - Close client connections after each evaluation
+# - Add proper cleanup in error handlers
+# - Update tests to verify connection management
+#
+# Refs: #456
+#
+# Multiple changes in one commit:
+# chore: improve development workflow
+#
+# - Add pre-commit hooks for linting and formatting
+# - Update VS Code settings for auto-format on save
+# - Configure git commit message template
+#
+# Breaking change example:
+# feat(api)!: change evaluation endpoint response format
+#
+# BREAKING CHANGE: Response now returns detailed metrics object
+# instead of simple score. Update clients to use new format:
+# { "score": 0.95, "metrics": {...} }
