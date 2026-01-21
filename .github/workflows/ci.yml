@@ -64,6 +64,12 @@ jobs:
             - name: install dependencies
               run: make pre-build
 
+            - name: Generate coverage report
+              run: uv run pytest --cov=rag_eval --cov-report=xml
+
+            - name: Check dependencies
+              run: uv run pip-audit
+
             - name: Run tests
               run: uv run pytest
 
@@ -117,7 +123,9 @@ jobs:
                 context: .
                 file: ./src/rag_eval/Dockerfile
                 push: true
-                tags: ghcr.io/sbehdadk/rag-eval:${{ github.sha }}
+                tags: |
+                   ghcr.io/sbehdadk/rag-eval:latest
+                   ghcr.io/sbehdadk/rag-eval:${{ github.sha }}
                 cache-from: type=gha
 
     security:
