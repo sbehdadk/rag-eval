@@ -24,6 +24,7 @@ dev = [
     "polyfactory>=2.19.3",
     "ruff>=0.9.1",
     "pytest-cov>=6.0.0",
+    "pip-audit>=2.10.0",
 ]
 
 [tool.ruff]
