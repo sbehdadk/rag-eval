@@ -1,0 +1,157 @@
+# ==============================================================================
+# 🚢 CD PIPELINE: Continuous Deployment
+# ==============================================================================
+# This workflow deploys the application to staging and production environments.
+# It demonstrates the "Build Once, Deploy Everywhere" principle.
+#
+# TRIGGERS:
+# - Push to 'main' → Deploy to Staging (automatic)
+# - Manual approval → Deploy to Production
+# ==============================================================================
+
+name: CD Pipeline
+
+on:
+  workflow_run:
+    workflows: ["CI Pipeline"]
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:  # Allow manual deployments
+    inputs:
+      environment:
+        description: 'Environment to deploy to'
+        required: true
+        type: choice
+        options:
+          - staging
+          - production
+
+permissions:
+  contents: read
+  packages: read
+  id-token: write  # For OIDC authentication
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  # ----------------------------------------------------------------------------
+  # 🧪 DEPLOY TO STAGING (Automatic)
+  # ----------------------------------------------------------------------------
+  deploy-staging:
+    name: Deploy to Staging
+    runs-on: ubuntu-latest
+    if: |
+      github.event_name == 'workflow_dispatch' && github.event.inputs.environment == 'staging' ||
+      github.event.workflow_run.conclusion == 'success'
+    environment:
+      name: staging
+      url: https://staging.example.com
+    
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Pull Latest Image
+        run: |
+          docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:main-${{ github.sha }}
+
+      # 💡 EXAMPLE: Deploy to AWS ECS (Commented - requires AWS setup)
+      # - name: Configure AWS Credentials (OIDC)
+      #   uses: aws-actions/configure-aws-credentials@v4
+      #   with:
+      #     role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+      #     aws-region: us-east-1
+      #
+      # - name: Deploy to ECS
+      #   run: |
+      #     aws ecs update-service \
+      #       --cluster staging-cluster \
+      #       --service rag-eval-service \
+      #       --force-new-deployment
+
+      # 💡 EXAMPLE: Deploy to Kubernetes (Commented - requires K8s setup)
+      # - name: Set up kubectl
+      #   uses: azure/setup-kubectl@v3
+      #
+      # - name: Deploy to K8s
+      #   run: |
+      #     kubectl set image deployment/rag-eval \
+      #       rag-eval=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:main-${{ github.sha }} \
+      #       --namespace=staging
+
+      - name: Deployment Summary
+        run: |
+          echo "### 🚀 Staging Deployment Complete" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Image:** \`${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:main-${{ github.sha }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "**Environment:** Staging" >> $GITHUB_STEP_SUMMARY
+          echo "**Deployed at:** $(date -u)" >> $GITHUB_STEP_SUMMARY
+
+  # ----------------------------------------------------------------------------
+  # 🏭 DEPLOY TO PRODUCTION (Manual Approval Required)
+  # ----------------------------------------------------------------------------
+  deploy-production:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    needs: deploy-staging
+    if: github.event_name == 'workflow_dispatch' && github.event.inputs.environment == 'production'
+    environment:
+      name: production
+      url: https://production.example.com
+    
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Pull Production Image
+        run: |
+          docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:main-${{ github.sha }}
+
+      # 💡 BLUE/GREEN DEPLOYMENT PATTERN
+      # 1. Deploy to "Green" environment (new version)
+      # 2. Run smoke tests
+      # 3. Switch traffic from "Blue" to "Green"
+      # 4. Keep "Blue" running for quick rollback
+
+      - name: Deployment Summary
+        run: |
+          echo "### 🎉 Production Deployment Complete" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Image:** \`${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:main-${{ github.sha }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "**Environment:** Production" >> $GITHUB_STEP_SUMMARY
+          echo "**Deployed at:** $(date -u)" >> $GITHUB_STEP_SUMMARY
+
+      # 💡 POST-DEPLOYMENT: Notify Team
+      # - name: Notify Slack
+      #   uses: slackapi/slack-github-action@v1
+      #   with:
+      #     webhook-url: ${{ secrets.SLACK_WEBHOOK }}
+      #     payload: |
+      #       {
+      #         "text": "🚀 Production deployment successful!",
+      #         "blocks": [
+      #           {
+      #             "type": "section",
+      #             "text": {
+      #               "type": "mrkdwn",
+      #               "text": "*Deployment to Production*\n\nCommit: ${{ github.sha }}\nDeployed by: ${{ github.actor }}"
+      #             }
+      #           }
+      #         ]
+      #       }

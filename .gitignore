@@ -1,1 +1,10 @@
+
+# Environment
 .env
+
+# Python / UV
+.venv
+__pycache__
+*.pyc
+*.pyo
+*.pyd
