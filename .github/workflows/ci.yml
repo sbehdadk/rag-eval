@@ -66,23 +66,26 @@ jobs:
             - name: Run tests
               run: uv run pytest
 
-    # build:
-    #     name: Build the image
-    #     runs-on: ubuntu-latest
-    #     steps:
-    #         - name: Checkout code
-    #           uses: actions/checkout@v4
+    build:
+        name: Build the image
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
 
-    #         - name: setup python
-    #           uses: actions/setup-python@v5
-    #           with:
-    #             python-version: '3.13'
+            - name: setup python
+              uses: actions/setup-python@v5
+              with:
+                python-version: '3.13'
 
-    #         - name: install uv
-    #           uses: astral-sh/setup-uv@v4
+            - name: install uv
+              uses: astral-sh/setup-uv@v4
 
-    #         - name: install dependencies
-    #           run: make pre-build
+            - name: install dependencies
+              run: make pre-build
 
-    #         - name: build the image
-    #           run:
+            - name: build the image
+              run: make build-docker
+
+            - name: logging
+              run: echo "Image built successfully"
