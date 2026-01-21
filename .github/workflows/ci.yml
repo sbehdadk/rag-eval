@@ -3,9 +3,9 @@ name: CI pipeline rag-eval
 
 on: 
     push:
-        branches: [main, develop]
+        branches: [main, dev]
     pull_request:
-        branches: [main, develop]
+        branches: [main, dev]
     workflow_dispatch:  # Allow manual triggers
 
 
@@ -52,15 +52,28 @@ jobs:
         steps:
             - name: Checkout code
               uses: actions/checkout@v4
-    build:
-        runs-on: ubuntu-latest
-        steps:
-            - name: Checkout code
-              uses: actions/checkout@v4
-
             - name: setup python
               uses: actions/setup-python@v5
               with:
                 python-version: '3.13'
             
-            - name: install uv
+            - name: intal uv
+              uses: astral-sh/setup-uv@v4
+
+            - name: install dependencies
+              run: uv sync --frozen
+
+            - name: Run tests
+              run: uv run pytest
+    # build:
+    #     runs-on: ubuntu-latest
+    #     steps:
+    #         - name: Checkout code
+    #           uses: actions/checkout@v4
+
+    #         - name: setup python
+    #           uses: actions/setup-python@v5
+    #           with:
+    #             python-version: '3.13'
+            
+    #         - name: install uv
