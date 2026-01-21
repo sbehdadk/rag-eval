@@ -53,6 +53,4 @@ class TestEvaluationService:
         service = EvaluationService(evaluator=openai_adapter)
         request = EvaluationRequestFactory.build(question=question, answer=answer, context=context)
         result = await service.evaluate(request.question, request.answer, request.context)
-        assert result
-
-    
+        assert result    
