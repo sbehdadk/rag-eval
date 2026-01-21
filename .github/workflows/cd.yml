@@ -1,0 +1,36 @@
+name: CD pipeline rag-eval
+
+
+on:
+    workflow_run:
+        workflows: ["CI pipeline rag-eval"]
+        types: [completed]
+        branches: [main]
+    workflow_dispatch:
+        inputs:
+            environment:
+                type: choice
+                default: "staging"
+                required: true
+                description: "Environment to deploy to"
+                options:
+                    - "staging"
+                    - "production"
+
+
+permissions:
+    contents: read
+    packages: read
+    id-token: write
+
+env:
+    REGISTRY: ghcr.io
+    IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+    deploy-staging:
+        name: Deploy to staging
+        runs-on: ubuntu-latest
+        steps:
+            - name: checkout code
+              uses: actions/checkout@v4
