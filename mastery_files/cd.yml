@@ -48,7 +48,7 @@ jobs:
     environment:
       name: staging
       url: https://staging.example.com
-    
+
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -107,7 +107,7 @@ jobs:
     environment:
       name: production
       url: https://production.example.com
-    
+
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4

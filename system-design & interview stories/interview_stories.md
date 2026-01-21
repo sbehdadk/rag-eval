@@ -80,7 +80,7 @@ I was tasked with designing and implementing a machine learning system that coul
 
 **Q: How did you handle data imbalance across cities?**
 
-**A:** 
+**A:**
 1. **Sampling strategy:** Used stratified sampling to ensure each city had representation in meta-training
 2. **City-specific normalization:** Normalized prices within each city to handle different price ranges
 3. **Task weighting:** Weighted loss by city population to prioritize larger markets
@@ -148,14 +148,14 @@ I was asked to build an AI-powered code review assistant that could:
      - Need to ground responses in company coding standards (not just generic advice)
      - Can update knowledge base without retraining
      - More explainable than fine-tuned models
-   
+
    - **Components:**
      - Vector database (Pinecone) for storing code examples and standards
      - OpenAI GPT-4 for code analysis and feedback generation
      - GitHub Actions integration for automatic PR reviews
 
 2. **Implementation (8 weeks):**
-   
+
    **Phase 1: Knowledge Base (2 weeks)**
    - Collected 500+ code review comments from senior engineers
    - Extracted coding standards from internal documentation
@@ -337,7 +337,7 @@ I was asked to reduce CI/CD costs by at least 20% without sacrificing build spee
 
    **Optimization 1: Right-size CodeBuild instances**
    - **Problem:** All pipelines used `BUILD_GENERAL1_LARGE` (8 vCPU, $0.10/min)
-   - **Solution:** 
+   - **Solution:**
      - Analyzed actual CPU usage: 80% of builds used <30% CPU
      - Switched 15 pipelines to `BUILD_GENERAL1_MEDIUM` (4 vCPU, $0.05/min)
      - Kept 5 pipelines on LARGE (ML model builds, Docker image builds)
@@ -545,7 +545,7 @@ I was asked to prepare and deliver a 30-minute technical presentation covering b
      - Technical approach (how I solved them)
      - Results (quantified impact)
      - Lessons learned (what I'd do differently)
-   
+
    **Week 2: Slide Creation**
    - Created 25 slides with:
      - Minimal text (max 3 bullets per slide)
@@ -573,7 +573,7 @@ I was asked to prepare and deliver a 30-minute technical presentation covering b
    - 5 teams reached out for consultation
 
 **Result:**
-- **Immediate Impact:** 
+- **Immediate Impact:**
    - Rated 4.6/5 by attendees (top 3 presentation at conference)
    - 5 teams adopted RAG approach for their projects
    - 2 teams started meta-learning experiments
@@ -625,7 +625,7 @@ I was asked to prepare and deliver a 30-minute technical presentation covering b
 **Q3: "How do you prevent the AI from learning bad coding practices?"**
 - **A:** Excellent concern! We curate the knowledge base - only include code review comments from senior engineers (5+ years experience). We also have human review for high-severity issues. The AI is an assistant, not a replacement.
 
-**Technique:** 
+**Technique:**
 - Acknowledge the question ("Great question!")
 - Answer honestly (admit limitations)
 - Provide context (trade-offs, mitigations)
@@ -708,7 +708,7 @@ I was asked to mentor these 5 junior engineers, helping them become productive c
      - Week 4: Testing strategies (unit, integration, mocking)
      - Week 5: Hexagonal architecture (ports, adapters, domain)
      - Week 6: CI/CD pipelines (GitHub Actions, deployment)
-   - **Approach:** 
+   - **Approach:**
      - 20 min: Concept explanation with diagrams
      - 30 min: Live coding / hands-on exercise
      - 10 min: Q&A and discussion
@@ -724,10 +724,10 @@ I was asked to mentor these 5 junior engineers, helping them become productive c
      ```
      Instead of:
      "Use dependency injection here"
-     
+
      I wrote:
-     "Great start! To make this more testable, consider using dependency 
-     injection. This lets us mock the database in tests. Here's an example 
+     "Great start! To make this more testable, consider using dependency
+     injection. This lets us mock the database in tests. Here's an example
      from our codebase: [link]. Happy to pair on this if helpful!"
      ```
 
@@ -751,7 +751,7 @@ I was asked to mentor these 5 junior engineers, helping them become productive c
 
 **Result:**
 - **Productivity:** All 5 juniors became independent contributors within 3 months (target met)
-- **Code Quality:** 
+- **Code Quality:**
    - Bug rate decreased by 40% (fewer preventable mistakes)
    - Test coverage increased from 60% to 85%
    - PR approval time decreased from 2 days to 1 day (better quality PRs)
@@ -761,7 +761,7 @@ I was asked to mentor these 5 junior engineers, helping them become productive c
    - 4.8/5 average rating from juniors on mentoring quality
    - "Best onboarding I've experienced" - Junior Engineer
    - "Sina made me feel confident to ask questions" - Junior Engineer
-- **Personal Growth:** 
+- **Personal Growth:**
    - Developed teaching and communication skills
    - Learned to be patient and empathetic
    - Recognized as mentor in performance review
@@ -776,7 +776,7 @@ I was asked to mentor these 5 junior engineers, helping them become productive c
 **Challenge:** Mentoring takes time (10-15 hours/week initially)
 
 **Solutions:**
-1. **Time blocking:** 
+1. **Time blocking:**
    - Mornings (9-12): Deep work on my projects
    - Afternoons (2-5): Mentoring, code reviews, meetings
    - Protected deep work time (no meetings before 12pm)
@@ -814,7 +814,7 @@ I was asked to mentor these 5 junior engineers, helping them become productive c
 
 **Solution:**
 1. **First 1-on-1:** Asked "How do you learn best?"
-2. **Adapted approach:** 
+2. **Adapted approach:**
    - Junior A: More pair programming
    - Junior B: More documentation links
    - Junior C: More shadowing opportunities
@@ -829,10 +829,10 @@ I was asked to mentor these 5 junior engineers, helping them become productive c
 
 **A:**
 **Quantitative metrics:**
-1. **Time to first independent PR:** 
+1. **Time to first independent PR:**
    - Target: <2 weeks
    - Actual: 10 days average
-2. **Bug rate:** 
+2. **Bug rate:**
    - Before: 0.8 bugs per PR
    - After: 0.5 bugs per PR (40% reduction)
 3. **PR cycle time:**

@@ -115,7 +115,7 @@ Why this option? What trade-offs did you make?
 | Custom runners | ✅ Yes | ✅ Yes |
 | Enterprise features | ⚠️ Limited | ✅ Yes |
 
-**Your Decision:** GitHub Actions  
+**Your Decision:** GitHub Actions
 **Rationale:** Free, simple, integrated with GitHub
 
 ---
@@ -137,7 +137,7 @@ Why this option? What trade-offs did you make?
 | Easy setup | ❌ No (Helm charts) | ✅ Yes (agent install) |
 | Alerting | ✅ Yes (AlertManager) | ✅ Yes (built-in) |
 
-**Your Decision:** Prometheus + Grafana  
+**Your Decision:** Prometheus + Grafana
 **Rationale:** Cost-effective, learn industry-standard tools
 
 ---
@@ -159,7 +159,7 @@ Why this option? What trade-offs did you make?
 | Learning curve | ⚠️ Medium | ⚠️ Medium |
 | State management | ⚠️ Manual (S3) | ✅ Automatic |
 
-**Your Decision:** Terraform  
+**Your Decision:** Terraform
 **Rationale:** Portable skills, industry standard
 
 ---
@@ -181,7 +181,7 @@ Why this option? What trade-offs did you make?
 | Features | ❌ Basic | ✅ Advanced |
 | Team size | ✅ 1-3 people | ⚠️ 5+ people |
 
-**Your Decision:** S3 Versioning  
+**Your Decision:** S3 Versioning
 **Rationale:** Simple, sufficient for 1 model, cost-effective
 
 ---
@@ -222,23 +222,23 @@ Why this option? What trade-offs did you make?
 ## Red Flags (Bad Decisions)
 
 ### ❌ Choosing Based on Hype
-**Example:** "Everyone uses Kubernetes, so I should too"  
+**Example:** "Everyone uses Kubernetes, so I should too"
 **Fix:** Evaluate based on YOUR requirements, not trends
 
 ### ❌ Premature Optimization
-**Example:** "I need a distributed database for 10 users/day"  
+**Example:** "I need a distributed database for 10 users/day"
 **Fix:** Start simple (SQLite), scale when needed
 
 ### ❌ Not Documenting Decisions
-**Example:** "I chose X because... I forgot why"  
+**Example:** "I chose X because... I forgot why"
 **Fix:** Write ADRs, even for small projects
 
 ### ❌ Ignoring Team Skills
-**Example:** "Let's use Rust (team only knows Python)"  
+**Example:** "Let's use Rust (team only knows Python)"
 **Fix:** Choose tools your team can maintain
 
 ### ❌ Vendor Lock-In Without Awareness
-**Example:** "We use 20 AWS-specific services, can't migrate"  
+**Example:** "We use 20 AWS-specific services, can't migrate"
 **Fix:** Acknowledge trade-offs, plan mitigation (e.g., use Terraform for portability)
 
 ---
