@@ -36,6 +36,12 @@ run:
 	@uv run python -m rag_eval.main
 	$(call print_success,Execution finished)
 
+pre-build:
+    $(call print_header,BUILDING IMAGE)
+    $(call print_info,Building Docker image...)
+    @uv sync --frozen
+    $(call print_success,Build complete)
+
 build-docker:
 	$(call print_header,BUILDING IMAGE)
 	$(call print_info,Building Docker image...)

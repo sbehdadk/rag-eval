@@ -37,7 +37,7 @@ jobs:
               uses: astral-sh/setup-uv@v4
 
             - name: install dependencies
-              run: uv sync --frozen
+              run: make pre-build
 
             - name: Run ruff linter
               run: uv run ruff check .
@@ -61,11 +61,13 @@ jobs:
               uses: astral-sh/setup-uv@v4
 
             - name: install dependencies
-              run: uv sync --frozen
+              run: make pre-build
 
             - name: Run tests
               run: uv run pytest
+
     # build:
+    #     name: Build the image
     #     runs-on: ubuntu-latest
     #     steps:
     #         - name: Checkout code
@@ -77,3 +79,10 @@ jobs:
     #             python-version: '3.13'
 
     #         - name: install uv
+    #           uses: astral-sh/setup-uv@v4
+
+    #         - name: install dependencies
+    #           run: make pre-build
+
+    #         - name: build the image
+    #           run:
