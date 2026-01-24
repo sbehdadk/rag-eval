@@ -18,7 +18,7 @@ print_info   = @echo "$(GRAY)┃$(RESET) $(BLUE)ℹ$(RESET)  $(1)"
 # Usage: $(call print_success, Message)
 print_success= @echo "$(GRAY)┗━━━$(RESET) $(BOLD)$(GREEN)✔ $(1)$(RESET)\n"
 
-.PHONY: help evaluate run lint
+.PHONY: help evaluate run lint k8s-deploy
 
 help:
 	@echo ""
@@ -82,3 +82,9 @@ test:
 	$(call print_header,TESTING)
 	$(call print_info,Running tests...)
 	@uv run pytest src/rag_eval/tests
+
+k8s-deploy:
+	kubectl apply -f k8s/
+
+k8s-status:
+	kubectl get deployments,services,ingress -l app.kubernetes.io/name=rag-eval

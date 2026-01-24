@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: rag-eval
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    cert-manager.io/cluster-issuer: letsencrypt-prod # if using TLS
+spec:
+  ingressClassName: traefik
+  rules:
+    - host: rag-eval.sbehdadk.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: rag-eval
+                port:
+                  number: 80
+  # tls:  # Uncomment for HTTPS
+  #   - secretName: rag-eval-tls
+  #     hosts:
+  #       - rag-eval.yourdomain.com
