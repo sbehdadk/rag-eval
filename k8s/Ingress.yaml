@@ -8,7 +8,7 @@ metadata:
 spec:
   ingressClassName: traefik
   rules:
-    - host: rag-eval.sbehdadk.com
+    - host: rag-eval.com
       http:
         paths:
           - path: /

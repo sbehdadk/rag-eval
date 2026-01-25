@@ -11,4 +11,3 @@ __pycache__/
 *.pyd
 .aider*
 .pytest_cache/
-.python-version
