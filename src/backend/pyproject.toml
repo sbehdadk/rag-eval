@@ -48,4 +48,4 @@ quote-style = "double"
 indent-style = "space"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/rag_eval", "src/rag_eval/tests"]
+packages = ["src/backend", "src/backend/tests"]

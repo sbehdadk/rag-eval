@@ -1,5 +1,4 @@
 from polyfactory.factories.pydantic_factory import ModelFactory
-
 from rag_eval.domain.models import EvaluationRequest, EvaluationResult
 
 
