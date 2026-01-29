@@ -45,7 +45,7 @@ pre-build:
 build-docker:
 	$(call print_header,BUILDING IMAGE)
 	$(call print_info,Building Docker image...)
-	@docker build -t rag-eval -f src/rag_eval/Dockerfile .
+	@docker build -t rag-eval -f services/rag_eval/Dockerfile .
 	$(call print_success,Build complete)
 
 run-docker:
@@ -81,7 +81,7 @@ start:
 test:
 	$(call print_header,TESTING)
 	$(call print_info,Running tests...)
-	@uv run pytest src/rag_eval/tests
+	@uv run pytest servicesrag_eval/tests
 
 k8s-deploy:
 	kubectl apply -f k8s/

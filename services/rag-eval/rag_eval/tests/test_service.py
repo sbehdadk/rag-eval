@@ -1,5 +1,6 @@
 import pytest
 from openai import AsyncOpenAI
+
 from rag_eval.adapters.openai_evaluator import OpenAIAdapter
 from rag_eval.application.evaluation_service import EvaluationService
 from rag_eval.tests.factories.model_factories import EvaluationRequestFactory

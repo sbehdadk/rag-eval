@@ -23,7 +23,7 @@ COPY pyproject.toml uv.lock ./
 RUN --mount=type=cache,target=/root/.cache/uv \
     uv sync --frozen --no-install-project --no-dev
 
-COPY backend /app/backend
+COPY rag_eval /app/rag_eval
 COPY README.md .
 
 RUN --mount=type=cache,target=/root/.cache/uv \
@@ -36,10 +36,10 @@ FROM base AS runtime
 RUN groupadd -r appuser && useradd -r -g appuser appuser
 
 COPY --from=builder --chown=appuser:appuser /app/.venv /app/.venv
-COPY --from=builder --chown=appuser:appuser /app/backend /app/bac   kend
+COPY --from=builder --chown=appuser:appuser /app/rag_eval /app/rag_eval
 
 ENV PATH="/app/.venv/bin:$PATH" \
-    PYTHONPATH="/app/backend"
+    PYTHONPATH="/app"
 
 USER appuser
 

@@ -1,6 +1,7 @@
 from unittest.mock import AsyncMock, MagicMock
 
 import pytest
+
 from rag_eval.tests.factories.model_factories import EvaluationResultFactory
 
 

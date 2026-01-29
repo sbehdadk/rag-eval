@@ -49,4 +49,7 @@ quote-style = "double"
 indent-style = "space"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/backend", "src/backend/rag_eval/tests"]
+packages = ["rag-eval"]
+
+[tool.pytest.ini_options]
+pythonpath = ["services/rag-eval"]
