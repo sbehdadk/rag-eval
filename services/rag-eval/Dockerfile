@@ -23,7 +23,7 @@ COPY pyproject.toml uv.lock ./
 RUN --mount=type=cache,target=/root/.cache/uv \
     uv sync --frozen --no-install-project --no-dev
 
-COPY rag_eval /app/rag_eval
+COPY ./rag_eval /app/rag_eval
 COPY README.md .
 
 RUN --mount=type=cache,target=/root/.cache/uv \
