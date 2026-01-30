@@ -190,8 +190,8 @@ jobs:
           file: ./services/frontend/Dockerfile
           push: true
           tags: |
-            ghcr.io/sbehdadk/rag-eval-frontend:latest
-            ghcr.io/sbehdadk/rag-eval-frontend:${{ github.sha }}
+            ghcr.io/sbehdadk/frontend:latest
+            ghcr.io/sbehdadk/frontend:${{ github.sha }}
           cache-from: type=gha
           platforms: linux/amd64,linux/arm64
 
