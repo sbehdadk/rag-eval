@@ -63,7 +63,7 @@ jobs:
           python-version: "3.13"
 
       - name: intal uv
-        uses: astral-sh/setup-uv@v4
+        uses: astral-sh/setup-uv@v7
 
       - name: install dependencies
         run: |
@@ -153,7 +153,7 @@ jobs:
           python-version: "3.13"
 
       - name: intal uv
-        uses: astral-sh/setup-uv@v4
+        uses: astral-sh/setup-uv@v7
 
       - name: install dependencies
         run: make pre-build
@@ -221,7 +221,7 @@ jobs:
   #         python-version: "3.13"
 
   #     - name: install uv
-  #       uses: astral-sh/setup-uv@v4
+  #       uses: astral-sh/setup-uv@v7
 
   #     - name: install dependencies
   #       run: make pre-build
@@ -246,7 +246,7 @@ jobs:
   #         python-version: "3.13"
 
   #     - name: intal uv
-  #       uses: astral-sh/setup-uv@v4
+  #       uses: astral-sh/setup-uv@v7
 
   #     - name: install dependencies
   #       run: make pre-build
