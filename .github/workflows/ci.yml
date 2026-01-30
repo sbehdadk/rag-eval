@@ -66,22 +66,34 @@ jobs:
         uses: astral-sh/setup-uv@v4
 
       - name: install dependencies
-        run: make pre-build
+        run: |
+          cd services/rag-eval
+          uv sync --frozen
 
       - name: Run ruff linter
-        run: uv run ruff check ./services/rag-eval
+        run: |
+          cd services/rag-eval
+          uv run ruff check .
 
       - name: Run ruff formatter check
-        run: uv run ruff format --check ./services/rag-eval
+        run: |
+          cd services/rag-eval
+          uv run ruff format --check .
 
       - name: run tests
-        run: uv run pytest ./services/rag-eval
+        run: |
+          cd services/rag-eval
+          uv run pytest
 
       - name: run coverage
-        run: uv run pytest --cov=rag_eval --cov-report=xml
+        run: |
+          cd services/rag-eval
+          uv run pytest --cov=rag_eval --cov-report=xml
 
       - name: check dependencies
-        run: uv run pip-audit
+        run: |
+          cd services/rag-eval
+          uv run pip-audit
 
       - name: build backend
         uses: docker/build-push-action@v5
