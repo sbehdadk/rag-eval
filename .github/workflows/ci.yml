@@ -96,7 +96,7 @@ jobs:
           uv run pip-audit
 
       - name: build backend
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: ./services/rag-eval
           file: ./services/rag-eval/Dockerfile
@@ -116,7 +116,7 @@ jobs:
 
       - name: Push image to GitHub Container Registry
         if: github.ref == 'refs/heads/main'
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: ./services/rag-eval
           file: ./services/rag-eval/Dockerfile
@@ -176,7 +176,7 @@ jobs:
         run: uv run pip-audit
 
       - name: build frontend
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: ./services/frontend
           file: ./services/frontend/Dockerfile
@@ -196,7 +196,7 @@ jobs:
 
       - name: Push image to GitHub Container Registry
         if: github.ref == 'refs/heads/main'
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: ./services/frontend
           file: ./services/frontend/Dockerfile
@@ -282,7 +282,7 @@ jobs:
   #           ${{ runner.os }}-buildx-
 
   #     - name: build backend
-  #       uses: docker/build-push-action@v5
+  #       uses: docker/build-push-action@v6
   #       with:
   #         context: .
   #         file: ./services/rag-eval/Dockerfile & ./services/frontend/Dockerfile
@@ -302,7 +302,7 @@ jobs:
 
   #     - name: Push image to GitHub Container Registry
   #       if: github.ref == 'refs/heads/main'
-  #       uses: docker/build-push-action@v5
+  #       uses: docker/build-push-action@v6
   #       with:
   #         context: .
   #         file: ./services/rag-eval/Dockerfile & ./services/frontend/Dockerfile
