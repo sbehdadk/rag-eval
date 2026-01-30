@@ -86,7 +86,7 @@ jobs:
       - name: build backend
         uses: docker/build-push-action@v5
         with:
-          context: .
+          context: ./services/rag-eval
           file: ./services/rag-eval/Dockerfile
           #load: true
           tags: rag-eval:latest
@@ -106,7 +106,7 @@ jobs:
         if: github.ref == 'refs/heads/main'
         uses: docker/build-push-action@v5
         with:
-          context: .
+          context: ./services/rag-eval
           file: ./services/rag-eval/Dockerfile
           push: true
           tags: |
@@ -166,7 +166,7 @@ jobs:
       - name: build frontend
         uses: docker/build-push-action@v5
         with:
-          context: .
+          context: ./services/frontend
           file: ./services/frontend/Dockerfile
           #load: true
           tags: rag-eval:latest
@@ -186,7 +186,7 @@ jobs:
         if: github.ref == 'refs/heads/main'
         uses: docker/build-push-action@v5
         with:
-          context: .
+          context: ./services/frontend
           file: ./services/frontend/Dockerfile
           push: true
           tags: |
