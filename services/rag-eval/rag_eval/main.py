@@ -1,14 +1,23 @@
 import os
+from pathlib import Path
 
 from fastapi import FastAPI
 from fastapi.param_functions import Depends
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 from openai import AsyncOpenAI
-
 from rag_eval.adapters.openai_evaluator import OpenAIAdapter
 from rag_eval.application.evaluation_service import EvaluationService
 from rag_eval.domain.models import EvaluationRequest, EvaluationResult
 
-app = FastAPI()
+app = FastAPI(
+    title="RAG Eval",
+    description="Retrieval-Augmented Generation Evaluation Platform",
+    version="1.0.0",
+)
+
+static_dir = Path(__file__).parent / "static"
+app.mount("/static", StaticFiles(directory=static_dir), name="static")
 
 
 async def get_openai_client():
@@ -28,10 +37,10 @@ async def get_openai_client():
 
 @app.get("/")
 async def root():
-    return {"message": "Hello World"}
+    return FileResponse(f"{static_dir}/index.html")
 
 
-@app.post("/evaluate", response_model=EvaluationResult)
+@app.post("/api/evaluate", response_model=EvaluationResult)
 async def evaluate_endpoint(
     request: EvaluationRequest,
     client: AsyncOpenAI = Depends(get_openai_client),  # noqa: B008

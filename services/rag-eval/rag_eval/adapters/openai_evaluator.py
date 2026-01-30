@@ -1,6 +1,5 @@
 from dotenv import load_dotenv
 from openai import AsyncOpenAI
-
 from rag_eval.domain.models import EvaluationResult
 
 load_dotenv()

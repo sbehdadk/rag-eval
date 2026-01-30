@@ -18,12 +18,13 @@ COPY --from=ghcr.io/astral-sh/uv:latest /uv /bin/uv
 ENV UV_COMPILE_BYTECODE=1 \
     UV_LINK_MODE=copy
 
+# Copy only service dependencies
 COPY pyproject.toml uv.lock ./
 
 RUN --mount=type=cache,target=/root/.cache/uv \
     uv sync --frozen --no-install-project --no-dev
 
-COPY src /app/src
+COPY ./rag_eval /app/rag_eval
 COPY README.md .
 
 RUN --mount=type=cache,target=/root/.cache/uv \
@@ -36,10 +37,10 @@ FROM base AS runtime
 RUN groupadd -r appuser && useradd -r -g appuser appuser
 
 COPY --from=builder --chown=appuser:appuser /app/.venv /app/.venv
-COPY --from=builder --chown=appuser:appuser /app/src /app/src
+COPY --from=builder --chown=appuser:appuser /app/rag_eval /app/rag_eval
 
 ENV PATH="/app/.venv/bin:$PATH" \
-    PYTHONPATH="/app/src"
+    PYTHONPATH="/app"
 
 USER appuser
 

@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rag-eval
+  labels:
+    app: rag-eval
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rag-eval
+  template:
+    metadata:
+      labels:
+        app: rag-eval
+    spec:
+      containers:
+        - name: rag-eval
+          image: ghcr.io/sbehdadk/rag-eval:1bc1c17dfa4a85f7c121366651ee70519ca7092d
+          ports:
+            - containerPort: 8000
