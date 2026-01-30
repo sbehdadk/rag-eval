@@ -6,7 +6,6 @@ from fastapi.param_functions import Depends
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from openai import AsyncOpenAI
-
 from rag_eval.adapters.openai_evaluator import OpenAIAdapter
 from rag_eval.application.evaluation_service import EvaluationService
 from rag_eval.domain.models import EvaluationRequest, EvaluationResult
